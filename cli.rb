@@ -43,7 +43,7 @@ class Client
 
   def list_issues(repo)
     @client.list_issues(repo).each do |issue|
-      puts issue.title + " " + @account.name(issue.assignee)
+      puts issue.title + " " + @account.name(issue.assignee) if issue.assignee
     end
   end
   
