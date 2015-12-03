@@ -2,29 +2,63 @@ require 'octokit'
 require 'dotenv'
 Dotenv.load
 
-def account_reposiroty(name)
-  accounts = { "yutakakinjyo" =>  'yutaka'}
-  accounts[name]
+class AccountRepo
+  def initialize
+    @accounts = { "yutakakinjyo" =>  'yutaka'}
+  end
+
+  def find_by(name)
+    @accounts[name]    
+  end  
 end
 
-def account_mapping(login)
-  account = account_reposiroty(login)
-  account ? account : login
+class Account
+
+  def initialize
+    @repo = AccountRepo.new
+  end
+  
+  def name(assignee)
+    return "no one" if assignee.nil?
+    account_mapping(assignee.login)
+  end
+
+  private
+  
+  def account_mapping(login)
+    account = @repo.find_by(login)
+    account ? account : login
+  end
+
 end
 
-def name(assignee)
-  return "no one" if assignee.nil?
-  account_mapping(assignee.login)
+class Client
+
+  def initialize
+    @client = Octokit::Client.new(:access_token => ENV['ACCESS_TOKEN'])
+    @account = Account.new
+    Octokit.auto_paginate = true
+    puts @client.rate_limit.remaining
+  end
+
+  def list_issues(repo)
+    @client.list_issues(repo).each do |issue|
+      puts issue.title + " " + @account.name(issue.assignee)
+    end
+  end
+  
 end
 
-client = Octokit::Client.new(:access_token => ENV['ACCESS_TOKEN'])
-Octokit.auto_paginate = true
+class Service
 
-puts client.rate_limit.remaining
+  def self.run
+    cl = Client.new
+    repo = ARGV[0]
+    cl.list_issues(repo)
+  end
 
-repo = ARGV[0]
-
-client.list_issues(repo).each do |issue|
-  puts issue.title + " " + name(issue.assignee)
 end
+
+Service.run
+
 
