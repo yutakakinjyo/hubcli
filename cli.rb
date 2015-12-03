@@ -7,18 +7,14 @@ def account_reposiroty(name)
   accounts[name]
 end
 
-def decorate(account)
-  account ? account : "no one"
-end
-
 def account_mapping(login)
   account = account_reposiroty(login)
-  decorate(account)
+  account ? account : login
 end
 
 def name(assignee)
-  login = assignee ? assignee.login : nil
-  account_mapping(login)
+  return "no one" if assignee.nil?
+  account_mapping(assignee.login)
 end
 
 client = Octokit::Client.new(:access_token => ENV['ACCESS_TOKEN'])
