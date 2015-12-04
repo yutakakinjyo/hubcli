@@ -3,7 +3,6 @@ require 'dotenv'
 require './account'
 Dotenv.load
 
-
 class Client
 
   def initialize

@@ -1,6 +1,6 @@
 class AccountRepo
   def initialize
-    @accounts = { "yutakakinjyo" =>  'yutaka'}
+    @accounts = {}
   end
 
   def find_by(name)
@@ -9,6 +9,10 @@ class AccountRepo
 
   def regist(login:, slack_name:)
     @accounts[login] = slack_name
+  end
+
+  def list
+    @accounts
   end
   
 end
