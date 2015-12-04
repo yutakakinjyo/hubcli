@@ -14,5 +14,9 @@ class AccountRepo
   def list
     @accounts
   end
+
+  def delete(name)
+    @accounts.delete(name)
+  end
   
 end
