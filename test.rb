@@ -18,5 +18,14 @@ class AccountRepoTest < MiniTest::Test
     @repo.regist(login: 'taro_github', slack_name: 'taro_slack')
     assert_equal list, @repo.list
   end
+
+  def test_delete_key
+    @repo.regist(login: 'yutakakinjyo', slack_name: 'yutaka')
+    @repo.regist(login: 'taro_github', slack_name: 'taro_slack')
+
+    @repo.delete('yutakakinjyo')
+    assert_equal 1, @repo.list.count
+  end
+
   
 end
